@@ -4,7 +4,7 @@ $active_mygdps = "active";
 require "auth/check_auth.php";
 require "sidebar.php";
 
-$url = "http://127.0.0.1:30458/page/mygdps?user_id=".$user_id;
+$url = "http://127.0.0.1:30458/page/mygdps?user_id=".$user_id."&access_token=".$access_token;
 $curl = curl_init($url);
 curl_setopt($curl, CURLOPT_URL, $url);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

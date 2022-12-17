@@ -5,7 +5,7 @@ require "../auth/check_auth.php";
 check_gdps_owner($user_id);
 require "./sidebar.php";
 
-$url = "http://127.0.0.1:30458/page/gdps/management?gdps_id=".$_GET["gdpsid"];
+$url = "http://127.0.0.1:30458/page/gdps/management?gdps_id=".$_GET["gdpsid"]."&user_id=".$user_id."&access_token=".$access_token;
 $curl = curl_init($url);
 curl_setopt($curl, CURLOPT_URL, $url);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -145,8 +145,8 @@ foreach ($response["subusers"] as $subuser) {
             </div>
             <div class="card-body">
               <div class="form-group">
-                <label for="exampleInputEmail1">Discord id</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter a discord id">
+                <label for="discordId">Discord id</label>
+                <input class="form-control" id="discordId" placeholder="Enter a discord id">
               </div>
             </div>
           </div>
@@ -162,6 +162,10 @@ foreach ($response["subusers"] as $subuser) {
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="manageLevels">
                 <label class="custom-control-label" for="manageLevels">Manage levels</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="managementPerm">
+                <label class="custom-control-label" for="managementPerm">See management page</label>
               </div>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="manageMapPacks">
@@ -196,7 +200,7 @@ foreach ($response["subusers"] as $subuser) {
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Add subuser</button>
+          <button type="button" class="btn btn-primary" onclick="addSubUser()">Add subuser</button>
         </div>
       </div>
       <!-- /.modal-content -->
@@ -210,7 +214,6 @@ foreach ($response["subusers"] as $subuser) {
 <script src="../plugins/toastr/toastr.min.js"></script>
 <script>
   function copyPassword() {
-    console.log("eee")
     $.ajax({
       url: "http://127.0.0.1:30458/getgdpspassword",
       type: "GET",
@@ -237,6 +240,64 @@ foreach ($response["subusers"] as $subuser) {
           title: 'GDPSFH',
           body: "Password copied!"
         })
+      }
+    })
+  }
+
+  function addSubUser() {
+    const subuser_id = document.getElementById("discordId").value
+    const allPerms = document.getElementById("allPerms").checked
+    const managementPerm = document.getElementById("managementPerm").checked
+    const manageLevels = document.getElementById("manageLevels").checked
+    const manageMapPacks = document.getElementById("manageMapPacks").checked
+    const manageGauntlets = document.getElementById("manageGauntlets").checked
+    const manageQuests = document.getElementById("manageQuests").checked
+    const manageUsers = document.getElementById("manageUsers").checked
+    const manageModerators = document.getElementById("manageModerators").checked
+    const seeSentLevels = document.getElementById("seeSentLevels").checked
+    const seeModActions = document.getElementById("seeModActions").checked
+
+    $.ajax({
+      url: "http://127.0.0.1:30458/addsubuser",
+      type: "POST",
+      data: JSON.stringify({
+        access_token: "<?php echo $access_token ?>",
+        user_id: "<?php echo $user_id ?>",
+        gdps_id: <?php echo $_GET["gdpsid"] ?>,
+        subuser_id: subuser_id,
+        allPerms: +allPerms,
+        managementPerm: +managementPerm,
+        manageLevels: +manageLevels,
+        manageMapPacks: +manageMapPacks,
+        manageGauntlets: +manageGauntlets,
+        manageQuests: +manageQuests,
+        manageUsers: +manageUsers,
+        manageModerators: +manageModerators,
+        seeSentLevels: +seeSentLevels,
+        seeModActions: +seeModActions,
+      }),
+      contentType: 'application/json',
+      dataType: "json",
+      processData: false,
+      success: function(response) {
+        if (!response["success"]) {
+          $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'GDPSFH',
+            body: response["message"]
+          })
+          return
+        }
+
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'GDPSFH',
+          body: "Subuser created! Reloading page..."
+        })
+
+        setTimeout(function(){
+          window.location.reload();
+        }, 2000);
       }
     })
   }

@@ -5,7 +5,7 @@ require "auth/check_auth.php";
 
 $card = "";
 if (isset($_POST["name"]) && isset($_POST["custom_url"])) {
-  $url = "http://127.0.0.1:30458/creategdps?name=".$_POST["name"]."&custom-url=".$_POST["custom_url"]."&version=2.1&user_id=$user_id";
+  $url = "http://127.0.0.1:30458/creategdps?name=".$_POST["name"]."&custom-url=".$_POST["custom_url"]."&version=2.1&user_id=$user_id"."&access_token=".$access_token;
   $curl = curl_init($url);
   curl_setopt($curl, CURLOPT_URL, $url);
   curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
