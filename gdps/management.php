@@ -145,8 +145,8 @@ foreach ($response["subusers"] as $subuser) {
             </div>
             <div class="card-body">
               <div class="form-group">
-                <label for="discordId">Discord id</label>
-                <input class="form-control" id="discordId" placeholder="Enter a discord id">
+                <label for="discordId">Discord UserID <a href="https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-">(Guide)</a></label>
+                <input class="form-control" id="discordId" placeholder="Enter a Discord UserID...">
               </div>
             </div>
           </div>
