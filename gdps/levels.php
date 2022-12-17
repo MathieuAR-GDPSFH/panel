@@ -1,5 +1,5 @@
 <?php
-$page_name = "Serveurs";
+$page_name = "Levels";
 $active_levels = "active";
 require "../auth/check_auth.php";
 check_gdps_owner($user_id);
@@ -108,7 +108,8 @@ require "sidebar.php";
                         <a class="dropdown-item" href="#">Change description</a>
                         <a class="dropdown-item" href="#">Change name</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Delete</a>
+                        <a class="dropdown-item" href="#">Change owner</a>
+                        <a class="dropdown-item bg-danger" href="#"> Delete</a>
                       </div>
                     </div>
                   </td>
