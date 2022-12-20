@@ -1,3 +1,57 @@
+<?php
+$staff_subcategory = "";
+
+foreach ($staff_permissions as $perm) {
+  switch ($perm) {
+    case "see_allgdps": {
+      $active = "";
+      if (isset($active_allgdps)) {
+        $active = "active";
+      }
+      $staff_subcategory = $staff_subcategory."
+      <li class='nav-item'>
+        <a href='all-gdps.php' class='nav-link ".$active."'>
+          <i class='nav-icon fas fa-user-shield'></i>
+          <p>All GDPS</p>
+        </a>
+      </li>
+      ";
+      break;
+    }
+    case "see_allusers": {
+      $active = "";
+      if (isset($active_allusers)) {
+        $active = "active";
+      }
+      $staff_subcategory = $staff_subcategory."
+      <li class='nav-item'>
+        <a href='all-users.php' class='nav-link ".$active."'>
+          <i class='nav-icon fas fa-list'></i>
+          <p>All users</p>
+        </a>
+      </li>
+      ";
+      break;
+    }
+  }
+}
+
+$staff_category = "
+<li class='nav-item menu-closed'>
+  <a href='#' class='nav-link'>
+    <i class='nav-icon fas fa-hammer'></i>
+    <p>
+      Staff
+      <i class='right fas fa-angle-left'></i>
+    </p>
+  </a>
+  <ul class='nav nav-treeview'>
+  ".$staff_subcategory."
+  </ul>
+</li>
+";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -103,35 +157,7 @@
               <p>My GDPS</p>
             </a>
           </li>
-          <li class="nav-item menu-closed">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-hammer"></i>
-              <p>
-                Staff
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="create-server.php" class="nav-link <?php if (isset($active_createserver)) {echo $active_createserver;} ?>">
-                  <i class="nav-icon fas fa-user-shield"></i>
-                  <p>Moderators</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="create-server.php" class="nav-link <?php if (isset($active_createserver)) {echo $active_createserver;} ?>">
-                  <i class="nav-icon fas fa-user-check"></i>
-                  <p>Mod actions</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="create-server.php" class="nav-link <?php if (isset($active_createserver)) {echo $active_createserver;} ?>">
-                  <i class="nav-icon fas fa-clock"></i>
-                  <p>Levels sent</p>
-                </a>
-              </li>
-            </ul>
-          </li>
+          <?php if ($staff_subcategory !== "") { echo $staff_category; } ?>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

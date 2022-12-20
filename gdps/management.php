@@ -24,10 +24,10 @@ foreach ($response["subusers"] as $subuser) {
   }
 
   $subusers = $subusers."
-  <tr>
+  <tr id='subuser-".$subuser["user_id"]."'>
     <td>".$subuser["user_name"]."</td>
     <td>".$permissions."</td>
-    <td><button type='button' class='btn btn-danger btn-sm fas fa-trash-alt mr-1'></button></td>
+    <td><button type='button' class='btn btn-danger btn-sm fas fa-trash-alt mr-1' onclick=\"deleteSubUser('".$subuser["user_id"]."')\"></button></td>
   </tr>";
 }
 ?>
@@ -90,7 +90,7 @@ foreach ($response["subusers"] as $subuser) {
           </div>
           <!-- /.card-header -->
           <div class="card-body p-0">
-            <table class="table">
+            <table class="table" id="subusers-table">
               <thead>
                 <tr>
                   <th>User</th>
@@ -155,17 +155,21 @@ foreach ($response["subusers"] as $subuser) {
               <h3 class="card-title">Permissions</h3>
             </div>
             <div class="card-body">
-              <div class="custom-control custom-switch">
+              <div class="custom-control custom-switch custom-switch-on-danger">
                 <input type="checkbox" class="custom-control-input" id="allPerms">
                 <label class="custom-control-label" for="allPerms">All permissions</label>
+              </div>
+              <div class="custom-control custom-switch custom-switch-on-danger">
+                <input type="checkbox" class="custom-control-input" id="managementPerm">
+                <label class="custom-control-label" for="managementPerm">See management page</label>
+              </div>
+              <div class="custom-control custom-switch custom-switch-on-danger">
+                <input type="checkbox" class="custom-control-input" id="manageModerators">
+                <label class="custom-control-label" for="manageModerators">Manage moderators</label>
               </div>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="manageLevels">
                 <label class="custom-control-label" for="manageLevels">Manage levels</label>
-              </div>
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="managementPerm">
-                <label class="custom-control-label" for="managementPerm">See management page</label>
               </div>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="manageMapPacks">
@@ -182,10 +186,6 @@ foreach ($response["subusers"] as $subuser) {
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="manageUsers">
                 <label class="custom-control-label" for="manageUsers">Manage users</label>
-              </div>
-              <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="manageModerators">
-                <label class="custom-control-label" for="manageModerators">Manage moderators</label>
               </div>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="seeSentLevels">
@@ -212,6 +212,8 @@ foreach ($response["subusers"] as $subuser) {
 <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
 <?php require "./footer.php"; ?>
 <script src="../plugins/toastr/toastr.min.js"></script>
+<script src="../plugins/popper/popper.js"></script>
+<script src="../plugins/bootstrap/js/bootstrap-confirmation.js"></script>
 <script>
   function copyPassword() {
     $.ajax({
@@ -298,6 +300,38 @@ foreach ($response["subusers"] as $subuser) {
         setTimeout(function(){
           window.location.reload();
         }, 2000);
+      }
+    })
+  }
+
+  function deleteSubUser(subuser_id) {
+    $.ajax({
+      url: "http://127.0.0.1:30458/deletesubuser",
+      type: "POST",
+      data: JSON.stringify({
+        access_token: "<?php echo $access_token ?>",
+        user_id: "<?php echo $user_id ?>",
+        gdps_id: <?php echo $_GET["gdpsid"] ?>,
+        subuser_id: subuser_id}),
+      contentType: 'application/json',
+      dataType: "json",
+      processData: false,
+      success: function(response) {
+        if (!response["success"]) {
+          $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'GDPSFH',
+            body: response["message"]
+          })
+          return
+        }
+
+        document.getElementById(`subuser-${subuser_id}`).remove()
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'GDPSFH',
+          body: "Subuser deleted!"
+        })
       }
     })
   }

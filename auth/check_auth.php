@@ -40,4 +40,5 @@ $user_id = $_SESSION["user_id"];
 $username = $_SESSION["username"];
 $avatar = $_SESSION["avatar"];
 $access_token = $_SESSION["access_token"];
+$staff_permissions = $_SESSION["staff_permissions"];
 ?>

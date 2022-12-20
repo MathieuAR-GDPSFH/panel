@@ -18,6 +18,7 @@ if (isset($_GET["code"])) {
     $_SESSION["username"] = $response["username"];
     $_SESSION["avatar"] = $response["avatar"];
     $_SESSION["access_token"] = $response["access_token"];
+    $_SESSION["staff_permissions"] = $response["staff_permissions"];
     header("Location: /index.php");
 }
 exit();
