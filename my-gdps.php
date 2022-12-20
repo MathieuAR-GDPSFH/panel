@@ -17,10 +17,12 @@ $response = json_decode($resp, true);
 $gdps_list = "";
 foreach ($response as $gdps) {
   $gdps_owner = "Error";
+  $role_color = "danger";
   if ($gdps["role"] == "Owner") {
       $gdps_owner = $username;
   } else {
       $gdps_owner = $gdps["username"];
+      $role_color = "blue";
   }
 
   $status = "Error";
@@ -35,15 +37,13 @@ foreach ($response as $gdps) {
 
   $date = date('d/m/Y', $gdps["created_on"]);
 
-  // <td><a href='/gdps?gdpsid=".$gdps["id"]."'>".$gdps["name"]."</a></td>
-
   $gdps_list = $gdps_list."
   <tr>
     <td><a href='/gdps?gdpsid=".$gdps["id"]."'>".$gdps["name"]."</a></td>
     <td>".$gdps_owner."</td>
     <td>".$date."</td>
     <td><span class='badge bg-".$status_color."'>".$status."</span></td>
-    <td><span class='badge bg-danger'>".$gdps["role"]."</span></td>
+    <td><span class='badge bg-".$role_color."'>".$gdps["role"]."</span></td>
   </tr>\n";
 }
 ?>
