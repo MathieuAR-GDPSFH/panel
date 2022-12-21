@@ -3,8 +3,6 @@ session_start();
 if (!isset($_SESSION["user_id"]) || !isset($_SESSION["access_token"])) {
     header("Location: /auth/login.php");
     die();
-} else {
-  
 }
 
 $gdps_name = "Error";

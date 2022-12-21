@@ -70,9 +70,9 @@ foreach ($response["subusers"] as $subuser) {
             <strong><i class="fas fa-shield-alt mr-1"></i> Management</strong>
 
             <p class="text-muted">
-            <button type="button" class="btn btn-danger btn-sm disabled">Reset GDPS</button>
+              <button type="button" class="btn btn-danger btn-sm disabled">Reset GDPS</button>
               <button type="button" class="btn btn-danger btn-sm disabled">Disable GDPS</button>
-              <button type="button" class="btn btn-danger btn-sm disabled">Delete GDPS</button>
+              <button type="button" class="btn btn-danger btn-sm" onclick="deleteGdps()">Delete GDPS</button>
             </p>
           </div>
           <!-- /.card-body -->
@@ -212,8 +212,7 @@ foreach ($response["subusers"] as $subuser) {
 <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
 <?php require "./footer.php"; ?>
 <script src="../plugins/toastr/toastr.min.js"></script>
-<script src="../plugins/popper/popper.js"></script>
-<script src="../plugins/bootstrap/js/bootstrap-confirmation.js"></script>
+<script src="../plugins/sweetalert2/sweetalert2.min.js"></script>
 <script>
   function copyPassword() {
     $.ajax({
@@ -312,7 +311,8 @@ foreach ($response["subusers"] as $subuser) {
         access_token: "<?php echo $access_token ?>",
         user_id: "<?php echo $user_id ?>",
         gdps_id: <?php echo $_GET["gdpsid"] ?>,
-        subuser_id: subuser_id}),
+        subuser_id: subuser_id
+      }),
       contentType: 'application/json',
       dataType: "json",
       processData: false,
@@ -331,6 +331,54 @@ foreach ($response["subusers"] as $subuser) {
           class: 'bg-success',
           title: 'GDPSFH',
           body: "Subuser deleted!"
+        })
+      }
+    })
+  }
+
+  function deleteGdps() {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      showLoaderOnConfirm: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "http://127.0.0.1:30458/deletegdps",
+          type: "DELETE",
+          data: JSON.stringify({
+            access_token: "<?php echo $access_token ?>",
+            user_id: "<?php echo $user_id ?>",
+            gdps_id: <?php echo $_GET["gdpsid"] ?>
+          }),
+          contentType: 'application/json',
+          dataType: "json",
+          processData: false,
+          success: function(response) {
+            if (!response["success"]) {
+              $(document).Toasts('create', {
+                class: 'bg-danger',
+                title: 'GDPSFH',
+                body: response["message"]
+              })
+              return
+            }
+
+            Swal.fire(
+              'GDPS deleted!',
+              'You will get redirected shortly..',
+              'success'
+            )
+
+            setTimeout(function(){
+              window.location.replace("http://localhost/my-gdps.php");
+            }, 3000);
+          }
         })
       }
     })

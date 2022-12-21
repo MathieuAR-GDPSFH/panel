@@ -2,32 +2,6 @@
 $page_name = "Create a GDPS";
 $active_creategdps = "active";
 require "auth/check_auth.php";
-
-$card = "";
-if (isset($_POST["name"]) && isset($_POST["custom_url"])) {
-  $url = "http://127.0.0.1:30458/creategdps?name=".$_POST["name"]."&custom-url=".$_POST["custom_url"]."&version=2.1&user_id=$user_id"."&access_token=".$access_token;
-  $curl = curl_init($url);
-  curl_setopt($curl, CURLOPT_URL, $url);
-  curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-
-  $resp = curl_exec($curl);
-  curl_close($curl);
-  $response = json_decode($resp, true);
-
-  if (!$response["success"]) {
-    $card = "<script type='text/javascript'>$(document).Toasts('create', {
-      class: 'bg-danger',
-      title: 'GDPSFH',
-      body: \"".$response["message"]."\"
-    })</script>";
-  } else if ($response["success"]) {
-    header("Location: /my-gdps.php");
-    die();
-  }
-}
-
 require "sidebar.php";
 ?>
 
@@ -37,23 +11,23 @@ require "sidebar.php";
       <div class="card-header">
         <h3 class="card-title">Create GDPS</h3>
       </div>
-      <form action="/create-gdps.php" method="post">
+      <form action="#">
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <label for="name">GDPS Name</label>
-                <input class="form-control" name="name" id="name" placeholder="GDPS Name">
+                <input class="form-control" id="name" placeholder="GDPS Name">
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
                 <label id="customUrlUpdate" for="custom_url">GDPS Custom URL (.ps.fhgdps.com)</label>
-                <input id="customUrl" class="form-control" name="custom_url" id="custom_url" placeholder="Example: greencatgdps">
+                <input id="customUrl" class="form-control" id="custom_url" placeholder="Example: greencatgdps">
               </div>
             </div>
             <div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="button" class="btn btn-primary" onclick="createGDPS()">Submit</button>
             </div>
           </div>
         </div>
@@ -83,6 +57,43 @@ require "sidebar.php";
     result.textContent = `GDPS Custom URL (${element.value}.ps.fhgdps.com)`;
   });
 </script>
-<?php
-echo $card;
-?>
+<script>
+  function createGDPS() {
+    const custom_url = document.getElementById('customUrl').value;
+    const gdps_name = document.getElementById('name').value;
+    $.ajax({
+      url: "http://127.0.0.1:30458/creategdps",
+      type: "POST",
+      data: JSON.stringify({
+        access_token: "<?php echo $access_token ?>",
+        user_id: "<?php echo $user_id ?>",
+        custom_url: custom_url,
+        name: gdps_name,
+        version: "2.1"
+      }),
+      contentType: 'application/json',
+      dataType: "json",
+      processData: false,
+      success: function(response) {
+        if (!response["success"]) {
+          $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'GDPSFH',
+            body: response["message"]
+          })
+          return
+        }
+
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'GDPSFH',
+          body: "GDPS creation starting! Redirecting soon..!"
+        })
+
+        setTimeout(function(){
+          window.location.replace("http://localhost/my-gdps.php");
+        }, 3000);
+      }
+    })
+  }
+</script>
