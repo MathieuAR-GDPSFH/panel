@@ -6,6 +6,11 @@
   <title>GDPSFH</title>
   <link rel="stylesheet" href="../plugins/toastr/toastr.min.css">
 
+  <!-- Bootstrap Color Picker -->
+  <link rel="stylesheet" href="../../plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="../plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="../plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -27,7 +32,7 @@
   <!-- summernote -->
   <link rel="stylesheet" href="../plugins/summernote/summernote-bs4.min.css">
   <!-- SweetAlert2 -->
-  <link rel="stylesheet" href="../../plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+  <link rel="stylesheet" href="../plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 
   <link rel="stylesheet" href="../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
@@ -130,7 +135,7 @@
               <p>Users</p>
             </a>
           </li>
-          <li class="nav-item menu-closed">
+          <li class="nav-item menu-<?php if (isset($active_gdpsmoderators)) {echo "open";} else {echo "closed";} ?>">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-hammer"></i>
               <p>
@@ -140,9 +145,9 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link <?php if (isset($active_createserver)) {echo $active_createserver;} ?>">
+                <a href="#" onclick="window.location='/gdps/moderators.php'+window.location.search;" class="nav-link <?php if (isset($active_gdpsmoderators)) {echo $active_gdpsmoderators;} ?>">
                   <i class="nav-icon fas fa-user-shield"></i>
-                  <p>Moderators</p>
+                  <p>Moderators / Roles</p>
                 </a>
               </li>
               <li class="nav-item">
