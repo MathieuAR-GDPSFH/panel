@@ -203,9 +203,7 @@ foreach ($response["subusers"] as $subuser) {
           <button type="button" class="btn btn-primary" onclick="addSubUser()">Add subuser</button>
         </div>
       </div>
-      <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
   </div>
 </section>
 

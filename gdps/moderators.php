@@ -20,9 +20,9 @@ $role_options = "";
 foreach ($response["roles"] as $role) {
   $badge = "Unknown";
   if ($role["badge"] === 2) {
-    $badge = "<img src='../dist/img/gd/badges/elder_mod.png' width='30%' height='30%'>";
+    $badge = "<img src='../dist/img/gd/badges/elder_mod.png' width='25px' height='25px'>";
   } elseif ($role["badge"] === 1) {
-    $badge = "<img src='../dist/img/gd/badges/mod.png' width='30%' height='30%'>";
+    $badge = "<img src='../dist/img/gd/badges/mod.png' width='25px' height='25px'>";
   } elseif ($role["badge"] === 0) {
     $badge = "No badge";
   }
@@ -37,17 +37,17 @@ foreach ($response["roles"] as $role) {
     $delete_disabled = "disabled";
   } else {
     $role_options = $role_options."
-    <option roleID='".$role["id"]."'>".$role["name"]."</option>
+    <option value='".$role["id"]."'>".$role["name"]."</option>
     ";
   }
 
   $roles = $roles."
   <tr>
+    <td>".$role["priority"]."</td>
     <td>".$role["name"]."</td>
     <td>".$badge."</td>
     <td>".$comment_color."</td>
-    <td><button type='button' class='btn btn-default btn-sm fas fa-edit mr-1' onclick='removeRole()'></button></td>
-    <td><button type='button' class='btn btn-danger btn-sm fas fa-trash-alt mr-1 ".$delete_disabled."' onclick='removeRole()'></button></td>
+    <td><button type='button' class='btn btn-default btn-sm fas fa-edit mr-1' onclick='removeRole()' data-toggle='tooltip' title='Edit role'></button><button type='button' class='btn btn-danger btn-sm fas fa-trash-alt mr-1 ".$delete_disabled."' onclick='removeRole()' data-toggle='tooltip' title='Delete'></button></td>
   </tr>
   ";
 }
@@ -106,11 +106,11 @@ foreach ($response["moderators"] as $mod) {
               <table class="table" id="subusers-table">
                 <thead>
                   <tr>
+                    <th>Priority</th>
                     <th>Name</th>
                     <th>Badge</th>
                     <th>Comment color</th>
-                    <th>Permissions</th>
-                    <th>Remove</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -143,18 +143,16 @@ foreach ($response["moderators"] as $mod) {
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>User</label>
-                    <select class="form-control select2" style="width: 100%; height: 400px;">
-                      <option>MathieuAR</option>
-                      <option>Rya</option>
-                      <option>GreenCat</option>
-                      <option>Yeet</option>
+                    <select class="form-control user-selection" style="width: 100%; height: 400px;" id="userSelection">
+                      <option value="" selected disabled>Select a user...</option>
                     </select>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Role</label>
-                    <select class="form-control select2" style="width: 100%;">
+                    <select class="form-control select2" style="width: 100%;" id="roleSelection">
+                      <option value="" selected disabled>Select a role...</option>
                       <?php echo $role_options; ?>
                     </select>
                   </div>
@@ -165,7 +163,7 @@ foreach ($response["moderators"] as $mod) {
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" onclick="addSubUser()">Add moderator</button>
+          <button type="button" class="btn btn-primary" onclick="addMod()">Add moderator</button>
         </div>
       </div>
     </div>
@@ -189,31 +187,31 @@ foreach ($response["moderators"] as $mod) {
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="discordId">Name</label>
-                    <input class="form-control" id="discordId" placeholder="Enter the name of the role...">
+                    <label for="roleName">Name</label>
+                    <input class="form-control" id="roleName" placeholder="Enter the role name...">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Badge</label>
-                    <select class="form-control select2" style="width: 100%; height: 400px;">
-                      <option>No badge</option>
-                      <option>Elder mod</option>
-                      <option>Moderator</option>
+                    <select class="form-control select2" style="width: 100%;" id="roleBadge">
+                      <option value="0">No badge</option>
+                      <option value="2">Elder mod</option>
+                      <option value="1">Moderator</option>
                     </select>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="discordId">Priority</label>
-                    <input class="form-control" id="discordId" placeholder="Enter number...">
+                    <label for="rolePriority">Priority</label>
+                    <input class="form-control" id="rolePriority" placeholder="Enter number...">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Comment color</label>
                     <div class="input-group role-color">
-                      <input type="text" class="form-control">
+                      <input type="text" class="form-control" id="roleColor">
                       <div class="input-group-append">
                         <span class="input-group-text"><i class="fas fa-square"></i></span>
                       </div>
@@ -246,7 +244,7 @@ foreach ($response["moderators"] as $mod) {
               </div>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="verifyCoinsCommand">
-                <label class="custom-control-label" for="verifyCoins">!verifycoins command</label>
+                <label class="custom-control-label" for="verifyCoinsCommand">!verifycoins command</label>
               </div>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="dailyCommand">
@@ -305,20 +303,20 @@ foreach ($response["moderators"] as $mod) {
                 <label class="custom-control-label" for="unlistCommandAll">!unlist command for all levels</label>
               </div>
               <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="chareCpCommandOwn" checked>
-                <label class="custom-control-label" for="chareCpCommandOwn">!sharecp command for own levels</label>
+                <input type="checkbox" class="custom-control-input" id="shareCpCommandOwn" checked>
+                <label class="custom-control-label" for="shareCpCommandOwn">!sharecp command for own levels</label>
               </div>
               <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="chareCpCommandAll">
-                <label class="custom-control-label" for="chareCpCommandAll">!sharecp command for all levels</label>
+                <input type="checkbox" class="custom-control-input" id="shareCpCommandAll">
+                <label class="custom-control-label" for="shareCpCommandAll">!sharecp command for all levels</label>
               </div>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="songCommandOwn" checked>
                 <label class="custom-control-label" for="songCommandOwn">!song command for own levels</label>
               </div>
               <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="songCpCommandAll">
-                <label class="custom-control-label" for="songCpCommandAll">!song command for all levels</label>
+                <input type="checkbox" class="custom-control-input" id="songCommandAll">
+                <label class="custom-control-label" for="songCommandAll">!song command for all levels</label>
               </div>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="rateDemon">
@@ -381,7 +379,7 @@ foreach ($response["moderators"] as $mod) {
         </div>
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" onclick="addSubUser()">Create role</button>
+          <button type="button" class="btn btn-primary" onclick="createRole()">Create role</button>
         </div>
       </div>
       <!-- /.modal-content -->
@@ -396,8 +394,161 @@ foreach ($response["moderators"] as $mod) {
 <script src="../plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
 <script src="../plugins/toastr/toastr.min.js"></script>
 <script>
+  let clicked = false
+  function createRole() {
+    if (clicked === true) return;
+    const role_badge = document.getElementById("roleBadge").value
+    const role_priority = document.getElementById("rolePriority").value
+    const role_name = document.getElementById("roleName").value
+    const role_color = document.getElementById("roleColor").value
+
+    const permissionElements = ["rateCommand",
+                                "featureCommand",
+                                "epicCommand",
+                                "unEpicCommand",
+                                "verifyCoinsCommand",
+                                "dailyCommand",
+                                "weeklyCommand",
+                                "deleteCommand",
+                                "setAccCommand",
+                                "renameCommandOwn",
+                                "renameCommandAll",
+                                "passCommandOwn",
+                                "passCommandAll",
+                                "descriptionCommandOwn",
+                                "descriptionCommandAll",
+                                "publicCommandOwn",
+                                "publicCommandAll",
+                                "unlistCommandOwn",
+                                "unlistCommandAll",
+                                "shareCpCommandOwn",
+                                "shareCpCommandAll",
+                                "songCommandOwn",
+                                "songCommandAll",
+                                "rateDemon",
+                                "rateStars",
+                                "rateDifficulty",
+                                "requestMod",
+                                "suggestRate",
+                                "deleteComment",
+                                "leaderboardBan",
+                                "createPackTool",
+                                "createQuestsTool",
+                                "modActionsTool",
+                                "suggestListTool",
+                                "dashboardModTools",
+                                "modIpCategory",
+                                "profileCommandDiscord"
+                              ];
+    const requestData = [];
+
+    for (const elementId of permissionElements) {
+      console.log(elementId)
+      requestData[elementId] = +document.getElementById(elementId).checked;
+    }
+
+    $.ajax({
+      url: "http://127.0.0.1:30458/createRole",
+      type: "POST",
+      data: JSON.stringify({
+        access_token: "<?php echo $access_token ?>",
+        user_id: "<?php echo $user_id ?>",
+        gdps_id: <?php echo $_GET["gdpsid"] ?>,
+        gdps_name: role_name,
+        badge: role_badge,
+        priority: role_priority,
+        comment_color: role_color,
+        ...requestData
+      }),
+      contentType: 'application/json',
+      dataType: "json",
+      processData: false,
+      success: function(response) {
+        if (!response["success"]) {
+          $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'GDPSFH',
+            body: response["message"]
+          })
+          return
+        }
+        clicked = true
+
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'GDPSFH',
+          body: "Role created! Reloading page..."
+        })
+
+        setTimeout(function(){
+          window.location.reload();
+        }, 2000);
+      }
+    })
+  }
+
+  function addMod() {
+    const mod_id = document.getElementById("userSelection").value
+    const role_id = document.getElementById("roleSelection").value
+    $.ajax({
+      url: "http://127.0.0.1:30458/addmoderator",
+      type: "POST",
+      data: JSON.stringify({
+        access_token: "<?php echo $access_token ?>",
+        user_id: "<?php echo $user_id ?>",
+        gdps_id: <?php echo $_GET["gdpsid"] ?>,
+        mod_id: mod_id,
+        role_id: role_id
+      }),
+      contentType: 'application/json',
+      dataType: "json",
+      processData: false,
+      success: function(response) {
+        if (!response["success"]) {
+          $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'GDPSFH',
+            body: response["message"]
+          })
+          return
+        }
+
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'GDPSFH',
+          body: "Moderator added! Reloading page..."
+        })
+
+        setTimeout(function(){
+          window.location.reload();
+        }, 2000);
+      }
+    })
+  }
+
   $(function () {
     $('.select2').select2()
+    $('.user-selection').select2({
+      ajax: {
+        url: "http://127.0.0.1:30458/getgdpsusers",
+        type: "GET",
+        data: function (params) {
+          var query = {
+            access_token: "<?php echo $access_token ?>",
+            user_id: "<?php echo $user_id ?>",
+            gdps_id: <?php echo $_GET["gdpsid"] ?>,
+            search_username: params.term
+          }
+
+          return query
+        },
+        processResults: function (data) {
+          return {
+            results: data.users
+          };
+        }
+      }
+    });
 
     $('.role-color').colorpicker()
     $('.role-color').on('colorpickerChange', function(event) {
