@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GDPSFH</title>
   <link rel="stylesheet" href="../plugins/toastr/toastr.min.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3257705067704579" crossorigin="anonymous"></script>
 
   <!-- Bootstrap Color Picker -->
   <link rel="stylesheet" href="../plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
@@ -84,7 +85,6 @@
         </div>
         <div class="info">
           <a href="#" class="d-block"><?php echo $gdps_name; ?></a>
-          <!--<a href="#" class="d-block"><?php #echo $user_name; ?></a> -->
         </div>
       </div>
 
@@ -107,31 +107,31 @@
           </li>
           <!-- onclick="window.location='/gdps/levels.php'+window.location.search;" -->
           <li class="nav-item">
-            <a href="#" class="nav-link <?php if (isset($active_levels)) {echo $active_levels;} ?>">
+            <a href="#" class="nav-link <?php if (isset($active_levels)) {echo $active_levels;} ?>" onclick="notImpYet()">
               <i class="nav-icon fas fa-list"></i>
               <p>Levels</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link <?php if (isset($active_createserver)) {echo $active_createserver;} ?>">
+            <a href="#" class="nav-link" onclick="notImpYet()">
               <i class="nav-icon fas fa-cubes"></i>
               <p>Map packs</p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link <?php if (isset($active_createserver)) {echo $active_createserver;} ?>">
+          <li class="nav-item" onclick="notImpYet()">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-trophy"></i>
               <p>Gauntlets</p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link <?php if (isset($active_createserver)) {echo $active_createserver;} ?>">
+          <li class="nav-item" onclick="notImpYet()">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-check"></i>
               <p>Quests</p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link <?php if (isset($active_createserver)) {echo $active_createserver;} ?>">
+          <li class="nav-item" onclick="notImpYet()">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-user"></i>
               <p>Users</p>
             </a>
@@ -151,13 +151,13 @@
                   <p>Moderators / Roles</p>
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" onclick="notImpYet()">
                 <a href="#" class="nav-link <?php if (isset($active_createserver)) {echo $active_createserver;} ?>">
                   <i class="nav-icon fas fa-user-check"></i>
                   <p>Mod actions</p>
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item" onclick="notImpYet()">
                 <a href="#" class="nav-link <?php if (isset($active_createserver)) {echo $active_createserver;} ?>">
                   <i class="nav-icon fas fa-clock"></i>
                   <p>Levels sent</p>

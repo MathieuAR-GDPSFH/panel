@@ -45,5 +45,15 @@
 <script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../dist/js/adminlte.js"></script>
+
+<script>
+  function notImpYet() {
+    $(document).Toasts('create', {
+      class: 'bg-danger',
+      title: 'GDPSFH',
+      body: "This is implemented yet."
+    })
+  }
+</script>
 </body>
 </html>

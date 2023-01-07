@@ -59,6 +59,7 @@ $staff_category = "
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GDPSFH</title>
   <link rel="stylesheet" href="plugins/toastr/toastr.min.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3257705067704579" crossorigin="anonymous"></script>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">

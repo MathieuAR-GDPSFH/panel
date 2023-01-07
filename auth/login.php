@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3257705067704579" crossorigin="anonymous"></script>
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -51,7 +53,6 @@
 
 <script type="text/javascript">
     $('#submit').click(function() {
-      console.log("entré")
       window.location.href = "https://discord.com/api/oauth2/authorize?client_id=881228402722500659&redirect_uri=http%3A%2F%2Flocalhost%2Fauth%2Fauth.php&response_type=code&scope=identify%20guilds%20guilds.join";
     });
 </script>

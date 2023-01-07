@@ -42,12 +42,12 @@ foreach ($response["roles"] as $role) {
   }
 
   $roles = $roles."
-  <tr>
+  <tr id='role-".$role["id"]."'>
     <td>".$role["priority"]."</td>
     <td>".$role["name"]."</td>
     <td>".$badge."</td>
     <td>".$comment_color."</td>
-    <td><button type='button' class='btn btn-default btn-sm fas fa-edit mr-1' onclick='removeRole()' data-toggle='tooltip' title='Edit role'></button><button type='button' class='btn btn-danger btn-sm fas fa-trash-alt mr-1 ".$delete_disabled."' onclick='removeRole()' data-toggle='tooltip' title='Delete'></button></td>
+    <td><button type='button' class='btn btn-default btn-sm fas fa-edit mr-1' onclick='removeRole()' title='Edit role' disabled></button><button type='button' class='btn btn-danger btn-sm fas fa-trash-alt mr-1 ".$delete_disabled."' onclick='deleteRole(".$role["id"].")' title='Delete role'></button></td>
   </tr>
   ";
 }
@@ -55,10 +55,10 @@ foreach ($response["roles"] as $role) {
 $moderators = "";
 foreach ($response["moderators"] as $mod) {
   $moderators = $moderators."
-  <tr>
+  <tr id='moderator-".$mod["assign_id"]."' roleid='".$mod["role_id"]."'>
     <td>".$mod["name"]."</td>
     <td>".$mod["role_name"]."</td>
-    <td><button type='button' class='btn btn-danger btn-sm fas fa-trash-alt mr-1' onclick='removeMod()'></button></td>
+    <td><button type='button' class='btn btn-default btn-sm fas fa-edit mr-1' onclick='removeRole()' title='Edit moderator' disabled></button><button type='button' class='btn btn-danger btn-sm fas fa-trash-alt mr-1' onclick='removeMod(".$mod["assign_id"].")' title='Remove moderator'></button></td>
   </tr>
   ";
 }
@@ -78,15 +78,15 @@ foreach ($response["moderators"] as $mod) {
               </div>
             </div>
             <div class="card-body p-0">
-              <table class="table" id="subusers-table">
+              <table class="table">
                 <thead>
                   <tr>
                     <th>Moderator</th>
                     <th>Role</th>
-                    <th>Remove</th>
+                    <th>Edit</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="moderators-list">
                   <?php echo $moderators; ?>
                 </tbody>
               </table>
@@ -110,6 +110,7 @@ foreach ($response["moderators"] as $mod) {
                     <th>Name</th>
                     <th>Badge</th>
                     <th>Comment color</th>
+                    <th>Edit</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -393,6 +394,7 @@ foreach ($response["moderators"] as $mod) {
 <script src="../plugins/select2/js/select2.full.min.js"></script>
 <script src="../plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
 <script src="../plugins/toastr/toastr.min.js"></script>
+<script src="../plugins/sweetalert2/sweetalert2.min.js"></script>
 <script>
   let clicked = false
   function createRole() {
@@ -443,12 +445,11 @@ foreach ($response["moderators"] as $mod) {
     const requestData = [];
 
     for (const elementId of permissionElements) {
-      console.log(elementId)
       requestData[elementId] = +document.getElementById(elementId).checked;
     }
 
     $.ajax({
-      url: "http://127.0.0.1:30458/createRole",
+      url: "<?php echo $api_url ?>/createRole",
       type: "POST",
       data: JSON.stringify({
         access_token: "<?php echo $access_token ?>",
@@ -491,7 +492,7 @@ foreach ($response["moderators"] as $mod) {
     const mod_id = document.getElementById("userSelection").value
     const role_id = document.getElementById("roleSelection").value
     $.ajax({
-      url: "http://127.0.0.1:30458/addmoderator",
+      url: "<?php echo $api_url ?>/addmoderator",
       type: "POST",
       data: JSON.stringify({
         access_token: "<?php echo $access_token ?>",
@@ -526,11 +527,110 @@ foreach ($response["moderators"] as $mod) {
     })
   }
 
+  function deleteRole(role_id) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      showLoaderOnConfirm: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "<?php echo $api_url ?>/deleterole",
+          type: "DELETE",
+          data: JSON.stringify({
+            access_token: "<?php echo $access_token ?>",
+            user_id: "<?php echo $user_id ?>",
+            gdps_id: <?php echo $_GET["gdpsid"] ?>,
+            role_id: role_id
+          }),
+          contentType: 'application/json',
+          dataType: "json",
+          processData: false,
+          success: function(response) {
+            if (!response["success"]) {
+              $(document).Toasts('create', {
+                class: 'bg-danger',
+                title: 'GDPSFH',
+                body: response["message"]
+              })
+              return
+            }
+
+            document.getElementById(`role-${role_id}`).remove()
+            const mod_list = document.getElementById(`moderators-list`)
+            var tableRow = mod_list.getElementsByTagName('tr');
+            for (var t = 0; t < tableRow.length; t++){
+              if (Number(tableRow[t].getAttribute("roleid")) === role_id) {
+                tableRow[t].remove()
+              }
+            }
+            Swal.fire(
+              'Role deleted!',
+              '',
+              'success'
+            )
+          }
+        })
+      }
+    })
+  }
+
+  function removeMod(assign_id) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      showLoaderOnConfirm: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "<?php echo $api_url ?>/removemoderator",
+          type: "DELETE",
+          data: JSON.stringify({
+            access_token: "<?php echo $access_token ?>",
+            user_id: "<?php echo $user_id ?>",
+            gdps_id: <?php echo $_GET["gdpsid"] ?>,
+            assign_id: assign_id
+          }),
+          contentType: 'application/json',
+          dataType: "json",
+          processData: false,
+          success: function(response) {
+            if (!response["success"]) {
+              $(document).Toasts('create', {
+                class: 'bg-danger',
+                title: 'GDPSFH',
+                body: response["message"]
+              })
+              return
+            }
+
+            document.getElementById(`moderator-${assign_id}`).remove()
+            Swal.fire(
+              'Moderator removed!',
+              '',
+              'success'
+            )
+          }
+        })
+      }
+    })
+  }
+
   $(function () {
     $('.select2').select2()
     $('.user-selection').select2({
       ajax: {
-        url: "http://127.0.0.1:30458/getgdpsusers",
+        url: "<?php echo $api_url ?>/getgdpsusers",
         type: "GET",
         data: function (params) {
           var query = {

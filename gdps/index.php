@@ -8,7 +8,10 @@ require "./sidebar.php";
 
 <section class="content">
   <div class="container-fluid">
-    in progress
+  <div class="callout callout-danger">
+    <h5><i class="fas fa-info"></i> Information:</h5>
+    In response to our poll, the website is currently open in early-access. Due to our tools being unfinished, most of the buttons aren't functional. Please avoid asking for the functionality of our tools.
+  </div>
   </div>
 </section>
 

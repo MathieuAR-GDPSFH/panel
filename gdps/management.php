@@ -48,12 +48,15 @@ foreach ($response["subusers"] as $subuser) {
 
             <hr>
 
-            <strong><i class="fas fa-key mr-1"></i> FTP & Database password</strong>
+            <strong><i class="fas fa-user mr-1"></i> FTP Hostname</strong>
 
-            <p class="text-muted">
-              <button type="button" id="password" onclick="copyPassword()" class="btn btn-default btn-sm">Copy password</button>
-              <button type="button" class="btn btn-danger btn-sm disabled">Reset password</button>
-            </p>
+            <p class="text-muted">ftp.fhgdps.com</p>
+
+            <hr>
+
+            <strong><i class="fas fa-key mr-1"></i> FTP Port</strong>
+
+            <p class="text-muted">21</p>
 
             <hr>
 
@@ -63,6 +66,24 @@ foreach ($response["subusers"] as $subuser) {
               <button onclick="window.open('https://<?php echo $gdps_curl; ?>.ps.fhgdps.com/')" type="button" class="btn btn-default btn-sm">Main page</button>
               <button onclick="window.open('https://<?php echo $gdps_curl; ?>.ps.fhgdps.com/tools')" type="button" class="btn btn-default btn-sm">Tools</button>
               <button onclick="window.open('https://pma.fhgdps.com/')" type="button" class="btn btn-default btn-sm">phpMyAdmin</button>
+            </p>
+
+            <hr>
+
+            <strong><i class="fas fa-download mr-1"></i> Download</strong>
+
+            <p class="text-muted">
+              <button id="get-pc-download" onclick="getPcDownload()" type="button" class="btn btn-default btn-sm">PC</button>
+              <button id="get-android-download" onclick="getAndroidDownload()" type="button" class="btn btn-default btn-sm">Android</button>
+            </p>
+
+            <hr>
+
+            <strong><i class="fas fa-key mr-1"></i> FTP & Database password</strong>
+
+            <p class="text-muted">
+              <button type="button" id="password" onclick="copyPassword()" class="btn btn-default btn-sm">Copy password</button>
+              <button type="button" class="btn btn-danger btn-sm disabled">Reset password</button>
             </p>
 
             <hr>
@@ -107,28 +128,6 @@ foreach ($response["subusers"] as $subuser) {
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-2">
-        <div class="card card-primary">
-          <div class="card-header">
-            <h3 class="card-title">FTP informations</h3>
-          </div>
-          <div class="card-body">
-            <strong><i class="fas fa-user mr-1"></i> Hostname</strong>
-
-            <p class="text-muted">ftp.fhgdps.com</p>
-
-            <hr>
-
-            <strong><i class="fas fa-key mr-1"></i> Port</strong>
-
-            <p class="text-muted">21</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="modal fade" id="modal-subusers">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -160,12 +159,16 @@ foreach ($response["subusers"] as $subuser) {
                 <label class="custom-control-label" for="allPerms">All permissions</label>
               </div>
               <div class="custom-control custom-switch custom-switch-on-danger">
-                <input type="checkbox" class="custom-control-input" id="managementPerm">
-                <label class="custom-control-label" for="managementPerm">See management page</label>
+                <input type="checkbox" class="custom-control-input" id="copyPass">
+                <label class="custom-control-label" for="copyPass">Copy GDPS password</label>
               </div>
               <div class="custom-control custom-switch custom-switch-on-danger">
                 <input type="checkbox" class="custom-control-input" id="manageModerators">
                 <label class="custom-control-label" for="manageModerators">Manage moderators</label>
+              </div>
+              <div class="custom-control custom-switch custom-switch-on-danger">
+                <input type="checkbox" class="custom-control-input" id="manageRoles">
+                <label class="custom-control-label" for="manageRoles">Manage roles</label>
               </div>
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="manageLevels">
@@ -205,6 +208,7 @@ foreach ($response["subusers"] as $subuser) {
       </div>
     </div>
   </div>
+  <iframe id="download_iframe" style="display:none;"></iframe>
 </section>
 
 <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
@@ -214,7 +218,7 @@ foreach ($response["subusers"] as $subuser) {
 <script>
   function copyPassword() {
     $.ajax({
-      url: "http://127.0.0.1:30458/getgdpspassword",
+      url: "<?php echo $api_url ?>/getgdpspassword",
       type: "GET",
       data: {
         access_token: "<?php echo $access_token ?>",
@@ -246,7 +250,7 @@ foreach ($response["subusers"] as $subuser) {
   function addSubUser() {
     const subuser_id = document.getElementById("discordId").value
     const allPerms = document.getElementById("allPerms").checked
-    const managementPerm = document.getElementById("managementPerm").checked
+    const copyPass = document.getElementById("copyPass").checked
     const manageLevels = document.getElementById("manageLevels").checked
     const manageMapPacks = document.getElementById("manageMapPacks").checked
     const manageGauntlets = document.getElementById("manageGauntlets").checked
@@ -255,9 +259,10 @@ foreach ($response["subusers"] as $subuser) {
     const manageModerators = document.getElementById("manageModerators").checked
     const seeSentLevels = document.getElementById("seeSentLevels").checked
     const seeModActions = document.getElementById("seeModActions").checked
+    const manageRoles = document.getElementById("manageRoles").checked
 
     $.ajax({
-      url: "http://127.0.0.1:30458/addsubuser",
+      url: "<?php echo $api_url ?>/addsubuser",
       type: "POST",
       data: JSON.stringify({
         access_token: "<?php echo $access_token ?>",
@@ -265,7 +270,7 @@ foreach ($response["subusers"] as $subuser) {
         gdps_id: <?php echo $_GET["gdpsid"] ?>,
         subuser_id: subuser_id,
         allPerms: +allPerms,
-        managementPerm: +managementPerm,
+        copyPass: +copyPass,
         manageLevels: +manageLevels,
         manageMapPacks: +manageMapPacks,
         manageGauntlets: +manageGauntlets,
@@ -274,6 +279,7 @@ foreach ($response["subusers"] as $subuser) {
         manageModerators: +manageModerators,
         seeSentLevels: +seeSentLevels,
         seeModActions: +seeModActions,
+        manageRoles: +manageRoles
       }),
       contentType: 'application/json',
       dataType: "json",
@@ -303,7 +309,7 @@ foreach ($response["subusers"] as $subuser) {
 
   function deleteSubUser(subuser_id) {
     $.ajax({
-      url: "http://127.0.0.1:30458/deletesubuser",
+      url: "<?php echo $api_url ?>/deletesubuser",
       type: "POST",
       data: JSON.stringify({
         access_token: "<?php echo $access_token ?>",
@@ -347,7 +353,7 @@ foreach ($response["subusers"] as $subuser) {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "http://127.0.0.1:30458/deletegdps",
+          url: "<?php echo $api_url ?>/deletegdps",
           type: "DELETE",
           data: JSON.stringify({
             access_token: "<?php echo $access_token ?>",
@@ -377,6 +383,98 @@ foreach ($response["subusers"] as $subuser) {
               window.location.replace("http://localhost/my-gdps.php");
             }, 3000);
           }
+        })
+      }
+    })
+  }
+
+  function getPcDownload() {
+    const button = document.getElementById("get-pc-download")
+    button.innerHTML = `
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Generating...
+    `
+
+    $.ajax({
+      url: "<?php echo $api_url ?>/getpcdownload",
+      type: "GET",
+      data: {
+        access_token: "<?php echo $access_token ?>",
+        user_id: "<?php echo $user_id ?>",
+        gdps_id: <?php echo $_GET["gdpsid"] ?>
+      },
+      contentType: "text/plain",
+      dataType: "json",
+      success: function(response) {
+        if (!response["success"]) {
+          $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'GDPSFH',
+            body: response["message"]
+          })
+          button.innerHTML = "PC"
+          return
+        }
+
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'GDPSFH',
+          body: "Download started!"
+        })
+        button.innerHTML = "PC"
+        document.getElementById('download_iframe').src = response["download"];
+      },
+      error: function () {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'GDPSFH',
+          body: "There was an error while trying to generate the download file."
+        })
+      }
+    })
+  }
+
+  function getAndroidDownload() {
+    const button = document.getElementById("get-android-download")
+    button.innerHTML = `
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Generating...
+    `
+
+    $.ajax({
+      url: "<?php echo $api_url ?>/getandroiddownload",
+      type: "GET",
+      data: {
+        access_token: "<?php echo $access_token ?>",
+        user_id: "<?php echo $user_id ?>",
+        gdps_id: <?php echo $_GET["gdpsid"] ?>
+      },
+      contentType: "text/plain",
+      dataType: "json",
+      success: function(response) {
+        if (!response["success"]) {
+          $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'GDPSFH',
+            body: response["message"]
+          })
+          button.innerHTML = "Android"
+          return
+        }
+
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'GDPSFH',
+          body: "Download started!"
+        })
+        button.innerHTML = "Android"
+        document.getElementById('download_iframe').src = response["download"];
+      },
+      error: function () {
+        $(document).Toasts('create', {
+          class: 'bg-danger',
+          title: 'GDPSFH',
+          body: "There was an error while trying to generate the download file."
         })
       }
     })
