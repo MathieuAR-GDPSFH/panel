@@ -3,7 +3,7 @@
   <footer class="main-footer">
     <button onclick="window.location='/logout.php'" type="button" class="btn btn-default btn-sm">Logout</button>
     <div class="float-right d-none d-sm-inline-block">
-      GDPSFH <b>Version</b> Dev
+      <b>GDPSFH</b> <i>Public Beta</i>
     </div>
   </footer>
 
