@@ -42,24 +42,6 @@ foreach ($response["subusers"] as $subuser) {
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <strong><i class="fas fa-user mr-1"></i> FTP & Database username</strong>
-
-            <p class="text-muted">gdps_<?php echo $gdps_curl; ?></p>
-
-            <hr>
-
-            <strong><i class="fas fa-user mr-1"></i> FTP Hostname</strong>
-
-            <p class="text-muted">ftp.fhgdps.com</p>
-
-            <hr>
-
-            <strong><i class="fas fa-key mr-1"></i> FTP Port</strong>
-
-            <p class="text-muted">21</p>
-
-            <hr>
-
             <strong><i class="fas fa-book mr-1"></i> GDPS links</strong>
 
             <p class="text-muted">
@@ -79,7 +61,7 @@ foreach ($response["subusers"] as $subuser) {
 
             <hr>
 
-            <strong><i class="fas fa-key mr-1"></i> FTP & Database password</strong>
+            <strong><i class="fas fa-key mr-1"></i> Database password</strong>
 
             <p class="text-muted">
               <button type="button" id="password" onclick="copyPassword()" class="btn btn-default btn-sm">Copy password</button>
