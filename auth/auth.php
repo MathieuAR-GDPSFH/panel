@@ -21,6 +21,10 @@ if (isset($_GET["code"])) {
         $_SESSION["staff_permissions"] = $response["staff_permissions"];
         header("Location: /index.php");
     } else {
+        if (array_key_exists("banned", $response)) {
+            exit("You are banned from GDPSFH for: ".$response["message"]);
+        }
+
         exit($response["message"]);
     }
 }

@@ -51,7 +51,7 @@
     $(document).Toasts('create', {
       class: 'bg-danger',
       title: 'GDPSFH',
-      body: "This is implemented yet."
+      body: "This is not implemented yet."
     })
   }
 </script>

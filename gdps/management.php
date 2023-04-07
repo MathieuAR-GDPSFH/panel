@@ -83,7 +83,7 @@ foreach ($response["subusers"] as $subuser) {
 
             <p class="text-muted">
               <button type="button" id="password" onclick="copyPassword()" class="btn btn-default btn-sm">Copy password</button>
-              <button type="button" class="btn btn-danger btn-sm disabled">Reset password</button>
+              <button type="button" onclick="changePassword()" class="btn btn-danger btn-sm">Reset password</button>
             </p>
 
             <hr>
@@ -247,6 +247,38 @@ foreach ($response["subusers"] as $subuser) {
     })
   }
 
+  function changePassword() {
+    $.ajax({
+      url: "<?php echo $api_url ?>/changepass",
+      type: "POST",
+      data: JSON.stringify({
+        access_token: "<?php echo $access_token ?>",
+        user_id: "<?php echo $user_id ?>",
+        gdps_id: <?php echo $_GET["gdpsid"] ?>
+      }),
+      contentType: 'application/json',
+      dataType: "json",
+      processData: false,
+      success: function(response) {
+        if (!response["success"]) {
+          $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'GDPSFH',
+            body: response["message"]
+          })
+          return
+        }
+
+        navigator.clipboard.writeText(response["password"]);
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'GDPSFH',
+          body: "Password changed!"
+        })
+      }
+    })
+  }
+
   function addSubUser() {
     const subuser_id = document.getElementById("discordId").value
     const allPerms = document.getElementById("allPerms").checked
@@ -380,7 +412,7 @@ foreach ($response["subusers"] as $subuser) {
             )
 
             setTimeout(function(){
-              window.location.replace("http://localhost/my-gdps.php");
+              window.location.replace("<?php echo $website_url ?>/my-gdps.php");
             }, 3000);
           }
         })
