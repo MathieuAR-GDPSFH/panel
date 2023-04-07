@@ -133,7 +133,7 @@
               <p>Level Reupload</p>
             </a>
           </li>
-          <li class="nav-item menu-<?php if (isset($active_gdpsmoderators)) {echo "open";} else {echo "closed";} ?>">
+          <li class="nav-item menu-<?php if (isset($active_gdpsmoderators) || isset($active_rateNotifications)) {echo "open";} else {echo "closed";} ?>">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-hammer"></i>
               <p>
@@ -158,6 +158,12 @@
                 <a href="#" class="nav-link <?php if (isset($active_createserver)) {echo $active_createserver;} ?>">
                   <i class="nav-icon fas fa-clock"></i>
                   <p>Levels sent</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" onclick="window.location='/gdps/rateNotifications.php'+window.location.search;" class="nav-link <?php if (isset($active_rateNotifications)) {echo $active_rateNotifications;} ?>">
+                  <i class="nav-icon fas fa-bell"></i>
+                  <p>Rate Notifications</p>
                 </a>
               </li>
             </ul>
