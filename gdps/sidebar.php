@@ -39,6 +39,7 @@
   <link rel="stylesheet" href="../plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="../plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <link rel="stylesheet" href="../dist/css/custom-table.css">
+  <script src="https://kit.fontawesome.com/d7316527b7.js" crossorigin="anonymous"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed dark-mode">
 <div class="wrapper">
@@ -131,6 +132,12 @@
             <a href="#" onclick="window.location='/gdps/levelReupload.php'+window.location.search;" class="nav-link <?php if (isset($active_levelReupload)) {echo $active_levelReupload;} ?>">
               <i class="nav-icon fas fa-upload"></i>
               <p>Level Reupload</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" onclick="window.location='/gdps/mainLevels.php'+window.location.search;" class="nav-link <?php if (isset($active_mainLevels)) {echo $active_mainLevels;} ?>">
+              <i class="nav-icon fas fa-play"></i>
+              <p>Main Levels</p>
             </a>
           </li>
           <li class="nav-item menu-<?php if (isset($active_gdpsmoderators) || isset($active_rateNotifications)) {echo "open";} else {echo "closed";} ?>">

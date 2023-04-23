@@ -85,6 +85,11 @@ $staff_category = "
   <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
   <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+  <link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="dist/css/pricing-plan.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed dark-mode">
 <div class="wrapper">
@@ -147,6 +152,18 @@ $staff_category = "
             <a href="my-gdps.php" class="nav-link <?php if (isset($active_mygdps)) {echo $active_mygdps;} ?>">
               <i class="nav-icon fas fa-list"></i>
               <p>My GDPS</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="profile.php" class="nav-link <?php if (isset($active_profile)) {echo $active_profile;} ?>">
+              <i class="nav-icon fas fa-user"></i>
+              <p>Profile</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="premium.php" class="nav-link <?php if (isset($active_premium)) {echo $active_premium;} ?>">
+              <i class="nav-icon fas fa-bolt"></i>
+              <p>Premium</p>
             </a>
           </li>
           <?php if ($staff_subcategory !== "") { echo $staff_category; } ?>

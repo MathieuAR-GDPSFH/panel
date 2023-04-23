@@ -127,6 +127,7 @@ foreach ($response["subusers"] as $subuser) {
         </div>
       </div>
     </div>
+  </div>
 
   <div class="modal fade" id="modal-subusers">
     <div class="modal-dialog">
@@ -197,6 +198,18 @@ foreach ($response["subusers"] as $subuser) {
               <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="seeModActions">
                 <label class="custom-control-label" for="seeModActions">See mod actions</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="changePassword">
+                <label class="custom-control-label" for="changePassword">Change GDPS password</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="reuploadLevels">
+                <label class="custom-control-label" for="reuploadLevels">Reupload levels</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="editMainLevels">
+                <label class="custom-control-label" for="editMainLevels">Edit main levels</label>
               </div>
             </div>
           </div>
@@ -292,6 +305,9 @@ foreach ($response["subusers"] as $subuser) {
     const seeSentLevels = document.getElementById("seeSentLevels").checked
     const seeModActions = document.getElementById("seeModActions").checked
     const manageRoles = document.getElementById("manageRoles").checked
+    const changePassword = document.getElementById("changePassword").checked
+    const reuploadLevels = document.getElementById("reuploadLevels").checked
+    const editMainLevels = document.getElementById("editMainLevels").checked
 
     $.ajax({
       url: "<?php echo $api_url ?>/addsubuser",
@@ -311,7 +327,10 @@ foreach ($response["subusers"] as $subuser) {
         manageModerators: +manageModerators,
         seeSentLevels: +seeSentLevels,
         seeModActions: +seeModActions,
-        manageRoles: +manageRoles
+        manageRoles: +manageRoles,
+        changePassword: +changePassword,
+        reuploadLevels: +reuploadLevels,
+        editMainLevels: +editMainLevels
       }),
       contentType: 'application/json',
       dataType: "json",
