@@ -37,32 +37,34 @@ require "sidebar.php";
 
 <section class="content">
   <div class="container-fluid">
-    <div class="col-md-12">
-      <div class="card card-primary">
-        <div class="card-header">
-          <h3 class="card-title">Main levels</h3>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Main levels</h3>
 
-          <div class="card-tools">
-            <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal-addLevel">Add level</button>
+            <div class="card-tools">
+              <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal-addLevel">Add level</button>
+            </div>
           </div>
-        </div>
-        <div class="card-body p-0">
-          <table class="table" id="addLevel-table">
-            <thead>
-              <tr>
-                <th>Position</th>
-                <th>Level ID</th>
-                <th>Name</th>
-                <th>Difficulty</th>
-                <th>Stars</th>
-                <th>Song</th>
-                <th>Remove</th>
-              </tr>
-            </thead>
-            <tbody id="main_levels">
-              <?php echo $mainLevels; ?>
-            </tbody>
-          </table>
+          <div class="card-body p-0">
+            <table class="table" id="addLevel-table">
+              <thead>
+                <tr>
+                  <th>Position</th>
+                  <th>Level ID</th>
+                  <th>Name</th>
+                  <th>Difficulty</th>
+                  <th>Stars</th>
+                  <th>Song</th>
+                  <th>Remove</th>
+                </tr>
+              </thead>
+              <tbody id="main_levels">
+                <?php echo $mainLevels; ?>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
