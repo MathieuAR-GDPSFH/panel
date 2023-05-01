@@ -65,7 +65,7 @@ foreach ($response["subusers"] as $subuser) {
 
             <p class="text-muted">
               <button type="button" id="password" onclick="copyPassword()" class="btn btn-default btn-sm">Copy password</button>
-              <button type="button" class="btn btn-danger btn-sm disabled">Reset password</button>
+              <button type="button" onclick="changePassword()" class="btn btn-danger btn-sm">Reset password</button>
             </p>
 
             <hr>
@@ -109,6 +109,7 @@ foreach ($response["subusers"] as $subuser) {
         </div>
       </div>
     </div>
+  </div>
 
   <div class="modal fade" id="modal-subusers">
     <div class="modal-dialog">
@@ -180,6 +181,18 @@ foreach ($response["subusers"] as $subuser) {
                 <input type="checkbox" class="custom-control-input" id="seeModActions">
                 <label class="custom-control-label" for="seeModActions">See mod actions</label>
               </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="changePassword">
+                <label class="custom-control-label" for="changePassword">Change GDPS password</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="reuploadLevels">
+                <label class="custom-control-label" for="reuploadLevels">Reupload levels</label>
+              </div>
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="editMainLevels">
+                <label class="custom-control-label" for="editMainLevels">Edit main levels</label>
+              </div>
             </div>
           </div>
         </div>
@@ -229,6 +242,38 @@ foreach ($response["subusers"] as $subuser) {
     })
   }
 
+  function changePassword() {
+    $.ajax({
+      url: "<?php echo $api_url ?>/changepass",
+      type: "POST",
+      data: JSON.stringify({
+        access_token: "<?php echo $access_token ?>",
+        user_id: "<?php echo $user_id ?>",
+        gdps_id: <?php echo $_GET["gdpsid"] ?>
+      }),
+      contentType: 'application/json',
+      dataType: "json",
+      processData: false,
+      success: function(response) {
+        if (!response["success"]) {
+          $(document).Toasts('create', {
+            class: 'bg-danger',
+            title: 'GDPSFH',
+            body: response["message"]
+          })
+          return
+        }
+
+        navigator.clipboard.writeText(response["password"]);
+        $(document).Toasts('create', {
+          class: 'bg-success',
+          title: 'GDPSFH',
+          body: "Password changed!"
+        })
+      }
+    })
+  }
+
   function addSubUser() {
     const subuser_id = document.getElementById("discordId").value
     const allPerms = document.getElementById("allPerms").checked
@@ -242,6 +287,9 @@ foreach ($response["subusers"] as $subuser) {
     const seeSentLevels = document.getElementById("seeSentLevels").checked
     const seeModActions = document.getElementById("seeModActions").checked
     const manageRoles = document.getElementById("manageRoles").checked
+    const changePassword = document.getElementById("changePassword").checked
+    const reuploadLevels = document.getElementById("reuploadLevels").checked
+    const editMainLevels = document.getElementById("editMainLevels").checked
 
     $.ajax({
       url: "<?php echo $api_url ?>/addsubuser",
@@ -261,7 +309,10 @@ foreach ($response["subusers"] as $subuser) {
         manageModerators: +manageModerators,
         seeSentLevels: +seeSentLevels,
         seeModActions: +seeModActions,
-        manageRoles: +manageRoles
+        manageRoles: +manageRoles,
+        changePassword: +changePassword,
+        reuploadLevels: +reuploadLevels,
+        editMainLevels: +editMainLevels
       }),
       contentType: 'application/json',
       dataType: "json",
@@ -362,7 +413,7 @@ foreach ($response["subusers"] as $subuser) {
             )
 
             setTimeout(function(){
-              window.location.replace("http://localhost/my-gdps.php");
+              window.location.replace("<?php echo $website_url ?>/my-gdps.php");
             }, 3000);
           }
         })

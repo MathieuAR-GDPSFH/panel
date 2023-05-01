@@ -19,11 +19,8 @@ require "sidebar.php";
             69
           </span>
         </div>
-        <!-- /.info-box-content -->
       </div>
-      <!-- /.info-box -->
     </div>
-    <!-- /.col -->
     <div class="col-12 col-sm-6 col-md-3">
       <div class="info-box">
         <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-server"></i></span>
@@ -34,9 +31,7 @@ require "sidebar.php";
             18
           </span>
         </div>
-        <!-- /.info-box-content -->
       </div>
-      <!-- /.info-box -->
     </div>
     <div class="col-12 col-sm-6 col-md-3">
       <div class="info-box">
@@ -48,9 +43,7 @@ require "sidebar.php";
             2
           </span>
         </div>
-        <!-- /.info-box-content -->
       </div>
-      <!-- /.info-box -->
     </div>
     <div class="col-12 col-sm-6 col-md-3">
       <div class="info-box">
@@ -62,9 +55,7 @@ require "sidebar.php";
             1
           </span>
         </div>
-        <!-- /.info-box-content -->
       </div>
-      <!-- /.info-box -->
     </div>
 
     <div class="clearfix hidden-md-up"></div>
@@ -73,7 +64,6 @@ require "sidebar.php";
           <div class="card-header">
             <h3 class="card-title">Levels</h3>
           </div>
-          <!-- /.card-header -->
           <div class="card-body">
             <table id="levels-list" class="table table-bordered table-striped">
               <thead>
