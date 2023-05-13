@@ -110,8 +110,8 @@
               <p>Map packs</p>
             </a>
           </li>
-          <li class="nav-item" onclick="notImpYet()">
-            <a href="#" class="nav-link">
+          <li class="nav-item">
+            <a href="#" onclick="window.location='/gdps/gauntlets.php'+window.location.search;" class="nav-link <?php if (isset($active_gauntlets)) {echo $active_gauntlets;} ?>">
               <i class="nav-icon fas fa-trophy"></i>
               <p>Gauntlets</p>
             </a>

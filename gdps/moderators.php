@@ -383,9 +383,7 @@ foreach ($response["moderators"] as $mod) {
           <button type="button" class="btn btn-primary" onclick="createRole()">Create role</button>
         </div>
       </div>
-      <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
   </div>
 </section>
 

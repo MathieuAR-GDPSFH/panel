@@ -15,8 +15,10 @@ curl_close($curl);
 $response = json_decode($resp, true);
 
 $staff_list = "";
+$tester_list = "";
 foreach ($response["staff_list"] as $staff) {
-  $staff_list = $staff_list."
+  $list = "";
+  $list = $list."
   <div class='col-md-3'>
   <div class='card card-widget widget-user'>
     <div class='widget-user-header bg-".$staff["role_color"]."'>
@@ -29,6 +31,12 @@ foreach ($response["staff_list"] as $staff) {
     <div class='card-footer'></div>
   </div>
 </div>\n";
+
+if ($staff["role_id"] === 30) {
+  $tester_list = $tester_list.$list;
+} else {
+  $staff_list = $staff_list.$list;
+}
 }
 ?>
 
@@ -42,7 +50,7 @@ foreach ($response["staff_list"] as $staff) {
           <div class="info-box-content">
             <span class="info-box-text">Total GDPS count</span>
             <span id="server_count" class="info-box-number">
-            <?php echo $response["total_gdps"] ?>
+              <?php echo $response["total_gdps"] ?>
             </span>
           </div>
           <!-- /.info-box-content -->
@@ -64,6 +72,10 @@ foreach ($response["staff_list"] as $staff) {
     <h3 class="mt-4 mb-4">Staff team</h3>
     <div class="row">
       <?php echo $staff_list ?>
+    </div>
+    <h3 class="mt-4 mb-4">Testers</h3>
+    <div class="row">
+      <?php echo $tester_list ?>
     </div>
 </section>
 

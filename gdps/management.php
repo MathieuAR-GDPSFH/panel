@@ -66,6 +66,7 @@ foreach ($response["subusers"] as $subuser) {
               <button onclick="window.open('https://<?php echo $gdps_curl; ?>.ps.fhgdps.com/')" type="button" class="btn btn-default btn-sm">Main page</button>
               <button onclick="window.open('https://<?php echo $gdps_curl; ?>.ps.fhgdps.com/tools')" type="button" class="btn btn-default btn-sm">Tools</button>
               <button onclick="window.open('https://pma.fhgdps.com/')" type="button" class="btn btn-default btn-sm">phpMyAdmin</button>
+              <button onclick="window.open('https://gdpshub.com/')" type="button" class="btn btn-default btn-sm">Advertise</button>
             </p>
 
             <hr>
